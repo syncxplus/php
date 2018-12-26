@@ -16,7 +16,7 @@ class Minify
 
     private function minify(\Base $f3, $type)
     {
-        $f3->UI = ROOT . "/html/$type/";
+        $f3->set('UI', ROOT . "/html/$type/");
         if (empty($_SERVER['QUERY_STRING'])) {
             $f3->error(404);
         } else {

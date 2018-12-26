@@ -17,7 +17,7 @@ class Login
 
     function post(\Base $f3)
     {
-        $logger = $f3->LOGGER;
+        $logger = $f3->get('LOGGER');
         $username = $_POST['username'];
         $password = $_POST['password'];
 

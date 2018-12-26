@@ -17,7 +17,7 @@ trait AppHelper
     {
         if (!$f3->get('SESSION.AUTHENTICATION')) {
             if ($f3->VERB == 'GET') {
-                setcookie('target', $f3->REALM, 0, '/');
+                setcookie('target', $f3->get('REALM'), 0, '/');
             } else {
                 setcookie('target', $this->url(), 0, '/');
             }

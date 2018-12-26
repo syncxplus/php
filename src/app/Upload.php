@@ -15,18 +15,17 @@ class Upload extends \Web
         if (!$this->auth($f3)) {
             $f3->reroute($this->url('/Login'));
         } else {
-            $f3->LOGGER->write($f3->VERB . ' ' . $f3->REALM);
-            if ($f3->POST['name']) {
-                $this->fileName = $f3->POST['name'];
+            if ($f3->get('POST.name')) {
+                $this->fileName = $f3->get('POST.name');
             } else {
-                $start = strpos($f3->URI, '/upload/');
+                $start = strpos($f3->get('URI'), '/upload/');
                 if ($start !== false) {
                     $start += strlen('/upload/');
-                    $end = strpos($f3->URI, '?');
+                    $end = strpos($f3->get('URI'), '?');
                     if ($end === false) {
-                        $end = strlen($f3->URI);
+                        $end = strlen($f3->get('URI'));
                     }
-                    $this->fileName = urldecode(substr($f3->URI, $start, $end));
+                    $this->fileName = urldecode(substr($f3->get('URI'), $start, $end));
                 }
             }
         }
@@ -37,9 +36,9 @@ class Upload extends \Web
         if (empty($this->fileName)) {
             echo \Template::instance()->render("upload.html");
         } else {
-            $file = $f3->UPLOADS . $this->fileName;
+            $file = $f3->get('UPLOADS') . $this->fileName;
             if (is_file($file)) {
-                $this->send($f3->UPLOADS . $this->fileName);
+                $this->send($f3->get('UPLOADS') . $this->fileName);
             } else {
                 $f3->error(404);
             }
