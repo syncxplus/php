@@ -8,7 +8,7 @@
     ],
     "license": "Unlicense",
     "require": {
-        "bcosca/fatfree": "dev-3.6.4-syncxplus"
+        "bcosca/fatfree": "dev-3.6.5-syncxplus"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0"
