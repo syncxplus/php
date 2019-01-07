@@ -8,6 +8,9 @@
     ],
     "license": "Unlicense",
     "require": {
+        "ext-curl": "*",
+        "ext-gmagick": "*",
+        "ext-json": "*",
         "bcosca/fatfree": "dev-3.6.5-syncxplus"
     },
     "require-dev": {
