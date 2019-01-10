@@ -51,8 +51,8 @@
             passwordInput.val("")
         });
         $("#login-submit").on("click", function () {
-            var username = usernameInput.val().trim();
-            var password = passwordInput.val().trim();
+            let username = usernameInput.val().trim();
+            let password = passwordInput.val().trim();
             if (!username) {
                 alert("{{@dict['login_username_required']}}");
                 return usernameInput.focus();
@@ -64,7 +64,7 @@
             $.post(location.href, {username: username, password: md5(password)})
                 .done(function (data, textStatus, jqXHR) {
                     console.log(data);
-                    var json = isJsonString(data);
+                    let json = isJsonString(data);
                     if (!!json) {
                         if (!json.error || json.error.code === 0) {
                             location.href = getCookie("target");
@@ -74,13 +74,10 @@
                     alert(data);
                     console.log(textStatus, jqXHR);
                 })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    alert(textStatus);
-                    console.log(textStatus, jqXHR, errorThrown);
-                })
+                .fail(generalCallback)
                 .always(function () {
                     $("#login-submit").removeAttr("disabled");
-                })
+                });
         });
     });
 </script>

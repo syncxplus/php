@@ -29,7 +29,7 @@
     });
 
     function put() {
-        var file = fileInfo(document.getElementById("upload-file"));
+        let file = fileInfo(document.getElementById("upload-file"));
         if (!file) {
             alert("{{@dict['upload']['file_required']}}");
             return;
@@ -44,20 +44,23 @@
             beforeSend: function () {
                 console.log("PUT ... " + file.name);
                 disableUpload();
-            }
-        }).done(function (data, textStatus, jqXHR) {
-            console.log(data, textStatus, jqXHR);
-            showResult('PUT', file.name);
-        }).fail(console.log).always(enableUpload);
+            },
+            complete: enableUpload,
+            success: function (data, textStatus, jqXHR) {
+                console.log(data, textStatus, jqXHR);
+                showResult('PUT', file.name);
+            },
+            error: generalCallback,
+        });
     }
 
     function post() {
-        var file = fileInfo(document.getElementById("upload-file"));
+        let file = fileInfo(document.getElementById("upload-file"));
         if (!file) {
             alert("{{@dict['upload']['file_required']}}");
             return;
         }
-        var formData = new FormData();
+        let formData = new FormData();
         formData.set("enctype", "multipart/form-data");
         formData.append("name", file.name);
         formData.append("file", file);
@@ -71,11 +74,14 @@
             beforeSend: function () {
                 console.log("POST ... " + file.name);
                 disableUpload();
-            }
-        }).done(function (data, textStatus, jqXHR) {
-            console.log(data, textStatus, jqXHR);
-            showResult("POST", file.name);
-        }).fail(console.log).always(enableUpload);
+            },
+            complete: enableUpload,
+            success: function (data, textStatus, jqXHR) {
+                console.log(data, textStatus, jqXHR);
+                showResult("POST", file.name);
+            },
+            error: enableUpload,
+        });
     }
 
     function showResult(method, filename) {
