@@ -21,11 +21,17 @@ function deleteCookie(name) {
     setCookie(name, null);
 }
 
+function buildQuery(data) {
+    return Object.keys(data)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+        .join('&');
+}
+
 /**
  * @param {Object} file: native object of <input type="file"/>
  * @return {Object} File: {name, type, size, lastModified, lastModifiedDate, ...}
  */
-function fileInfo(file) {
+function getFile(file) {
     return file ? (file.files ? file.files[0] : {}) : {}
 }
 
@@ -44,6 +50,15 @@ function isJsonString(data) {
 function generalCallback() {
     for (let i = 0; i < arguments.length; i++) {
         let arg = arguments[i];
-        alert((typeof arg === "object") ? (isJsonObject(arg) ? JSON.stringify(arg) : Object.prototype.toString.call(arg)) : arg)
+        if (typeof arg === "object") {
+            if (isJsonObject(arg)) {
+                alert(JSON.stringify(arg));
+            } else {
+                console.log(arg);
+                alert(Object.prototype.toString.call(arg));
+            }
+        } else {
+            alert(arg);
+        }
     }
 }

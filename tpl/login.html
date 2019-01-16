@@ -43,16 +43,20 @@
 </div>
 <script src="//cdn.bootcss.com/blueimp-md5/2.6.0/js/md5.min.js"></script>
 <script>
-    $(function () {
-        var usernameInput = $("#username");
-        var passwordInput = $("#password");
-        $("#login-reset").on("click", function () {
-            usernameInput.val("");
-            passwordInput.val("")
+    document.addEventListener('DOMContentLoaded', function () {
+        let usernameInput = document.getElementById("username");
+        let passwordInput = document.getElementById("password");
+        let loginReset = document.getElementById("login-reset");
+        let loginSubmit = document.getElementById("login-submit");
+
+        loginReset.addEventListener("click", function () {
+            usernameInput.value = "";
+            passwordInput.value = "";
         });
-        $("#login-submit").on("click", function () {
-            let username = usernameInput.val().trim();
-            let password = passwordInput.val().trim();
+
+        loginSubmit.addEventListener("click", function () {
+            let username = usernameInput.value;
+            let password = passwordInput.value;
             if (!username) {
                 alert("{{@dict['login_username_required']}}");
                 return usernameInput.focus();
@@ -60,23 +64,30 @@
                 alert("{{@dict['login_password_required']}}");
                 return passwordInput.focus();
             }
-            $(this).attr("disabled", "disabled");
-            $.post(location.href, {username: username, password: md5(password)})
-                .done(function (data, textStatus, jqXHR) {
-                    console.log(data);
-                    let json = isJsonString(data);
-                    if (!!json) {
-                        if (!json.error || json.error.code === 0) {
-                            location.href = getCookie("target");
-                            return;
-                        }
-                    }
-                    alert(data);
-                    console.log(textStatus, jqXHR);
+            let data = {username: username, password: md5(password)};
+            loginSubmit.setAttribute("disabled", "disabled");
+            fetch(location.href, {
+                method: "POST",
+                headers: {
+                    //"Content-Type": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                //body: JSON.stringify(data),
+                body: buildQuery(data),
+            })
+                .then(function (response) {
+                    return response.json();
                 })
-                .fail(generalCallback)
-                .always(function () {
-                    $("#login-submit").removeAttr("disabled");
+                .then(function (json) {
+                    if (!json.error || json.error.code === 0) {
+                        location.href = getCookie("target");
+                    } else {
+                        generalCallback(json);
+                    }
+                })
+                .catch(generalCallback)
+                .finally(function () {
+                    loginSubmit.removeAttribute("disabled");
                 });
         });
     });

@@ -23,39 +23,36 @@
     <table class="table"></table>
 </div>
 <script>
-    $(function () {
-        $("button.put").on("click", put);
-        $("button.post").on("click", post);
+    let putBtn = document.querySelector("button.put");
+    let postBtn = document.querySelector("button.post");
+
+    document.addEventListener('DOMContentLoaded', function () {
+        putBtn.addEventListener("click", put);
+        postBtn.addEventListener("click", post);
     });
 
     function put() {
-        let file = fileInfo(document.getElementById("upload-file"));
+        let file = getFile(document.getElementById("upload-file"));
         if (!file) {
             alert("{{@dict['upload']['file_required']}}");
             return;
         }
-        $.ajax({
-            url: "{{@base}}/upload/" + file.name,
-            type: "PUT",
-            cache: false,
-            data: file,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                console.log("PUT ... " + file.name);
-                disableUpload();
-            },
-            complete: enableUpload,
-            success: function (data, textStatus, jqXHR) {
-                console.log(data, textStatus, jqXHR);
+        disableUpload();
+        console.log("PUT ... " + file.name);
+        fetch("{{@base}}/upload/" + file.name, {
+            method: "PUT",
+            body: file,
+        })
+            .then(function (response) {
+                console.log(response);
                 showResult('PUT', file.name);
-            },
-            error: generalCallback,
-        });
+            })
+            .catch(generalCallback)
+            .finally(enableUpload);
     }
 
     function post() {
-        let file = fileInfo(document.getElementById("upload-file"));
+        let file = getFile(document.getElementById("upload-file"));
         if (!file) {
             alert("{{@dict['upload']['file_required']}}");
             return;
@@ -64,40 +61,38 @@
         formData.set("enctype", "multipart/form-data");
         formData.append("name", file.name);
         formData.append("file", file);
-        $.ajax({
-            url: "{{@base}}/upload/",
-            type: "POST",
-            cache: false,
-            data: formData,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                console.log("POST ... " + file.name);
-                disableUpload();
-            },
-            complete: enableUpload,
-            success: function (data, textStatus, jqXHR) {
-                console.log(data, textStatus, jqXHR);
-                showResult("POST", file.name);
-            },
-            error: enableUpload,
-        });
+        disableUpload();
+        console.log("POST ... " + file.name);
+        fetch("{{@base}}/upload/" + file.name, {
+            method: "POST",
+            body: formData,
+        })
+            .then(function (response) {
+                console.log(response);
+                showResult('POST', file.name);
+            })
+            .catch(generalCallback)
+            .finally(enableUpload);
     }
 
     function showResult(method, filename) {
-        $(".table").append('<tr><td>' + method + '</td><td><a href="{{@base}}/upload/' + filename + '" target="_blank">' + filename + '</a></td></tr>');
+        let html = '<tr><td>' + method + '</td><td><a href="{{@base}}/upload/' + filename + '" target="_blank">' + filename + '</a></td></tr>';
+        document.querySelector("table").insertAdjacentHTML("beforeend", html);
     }
 
     function disableUpload() {
-        $("button.btn")
-            .attr("disabled", "disabled")
-            .html('<i class="fa fa-spinner fa-pulse animated">');
+        let html = '<i class="fa fa-spinner fa-pulse animated">';
+        putBtn.setAttribute("disabled", "disabled");
+        putBtn.innerHTML = html;
+        postBtn.setAttribute("disabled", "disabled");
+        postBtn.innerHTML = html;
     }
 
     function enableUpload() {
-        $("button.btn").removeAttr("disabled");
-        $("button.put").text("PUT");
-        $("button.post").text("POST");
+        putBtn.removeAttribute("disabled");
+        putBtn.innerText = "PUT";
+        postBtn.removeAttribute("disabled");
+        postBtn.innerText = "POST";
     }
 </script>
 </body>
