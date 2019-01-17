@@ -26,7 +26,7 @@
     let putBtn = document.querySelector("button.put");
     let postBtn = document.querySelector("button.post");
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener("DOMContentLoaded", function () {
         putBtn.addEventListener("click", put);
         postBtn.addEventListener("click", post);
     });
@@ -45,7 +45,7 @@
         })
             .then(function (response) {
                 console.log(response);
-                showResult('PUT', file.name);
+                showResult("PUT", file.name);
             })
             .catch(generalCallback)
             .finally(enableUpload);
@@ -69,7 +69,7 @@
         })
             .then(function (response) {
                 console.log(response);
-                showResult('POST', file.name);
+                showResult("POST", file.name);
             })
             .catch(generalCallback)
             .finally(enableUpload);
