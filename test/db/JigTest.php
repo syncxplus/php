@@ -8,15 +8,14 @@
 
 namespace test\db;
 
-use DB\Jig;
+use db\JigMapper;
 use PHPUnit\Framework\TestCase;
 
 class JigTest extends TestCase
 {
     function testUser()
     {
-        $db = new Jig(RUNTIME . '/jig/',Jig::FORMAT_JSON);
-        $user = new Jig\Mapper($db,'users');
+        $user = new JigMapper('users');
         $user->load(['@name=?', 'user']);
         if ($user->dry()) {
             $user['name'] = 'user';

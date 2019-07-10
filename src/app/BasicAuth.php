@@ -8,14 +8,13 @@
 
 namespace app;
 
-use DB\Jig;
+use db\JigMapper;
 
 class BasicAuth
 {
     function get()
     {
-        $jig = new Jig(RUNTIME . '/jig/',Jig::FORMAT_JSON);
-        $user = new Jig\Mapper($jig,'users');
+        $user = new JigMapper('users');
         $auth = new \Auth($user, array('id'=>'name', 'pw'=>'password'));
         if ($auth->basic()) {
             echo 'HTTP basic authentication';
